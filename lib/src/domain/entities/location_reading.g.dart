@@ -18,7 +18,7 @@ class LocationReadingAdapter extends TypeAdapter<LocationReading> {
     };
     return LocationReading(
       timeStamp: fields[0] as DateTime,
-      distance: fields[1] as double,
+      distance: fields[1] as String,
       latitude: fields[2] as double,
       longitude: fields[3] as double,
     );

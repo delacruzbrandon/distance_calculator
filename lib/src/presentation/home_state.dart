@@ -15,7 +15,7 @@ class HomeIdle extends HomeState {
 class TrackingStart extends HomeState {
   final Position currentPosition;
   final TargetLocation targetPosition;
-  final double distanceFromTarget;
+  final String distanceFromTarget;
   final List<LocationReading> historyList;
   final int tick;
 

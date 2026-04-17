@@ -98,7 +98,7 @@ lib/
 flutter pub get
 
 # Run on a connected device or emulator
-flutter run
+`flutter run` OR `flutter run lib/main.dart`
 ```
 
 ### Regenerate Hive Adapters
@@ -126,6 +126,7 @@ flutter build web   # Build web
 No `.env` file or secrets are needed. The only configuration is in:
 
 **`lib/src/data/constants/app_constants.dart`**
+Endpoint is hosted from my own personal Website Domain.
 ```
 Base URL:  https://www.kasundo.app/api/
 Endpoint:  /target-location-test
@@ -155,3 +156,14 @@ flutter test
 ```
 
 Current coverage: a single smoke test in `test/widget_test.dart` that verifies the app initializes correctly. Unit tests for `HomeCubit` and the repository layer are not yet written.
+
+---
+
+## Assumptions
+
+- **Foreground-only tracking** — the app pauses the GPS timer when backgrounded and resumes it when brought back to the foreground. No background location updates are requested.
+- **Target is fetched once per session** — the target coordinates are retrieved from the API when tracking starts and held in memory for the duration of that session. They are not polled or refreshed mid-session.
+- **Each session starts fresh** — starting a new tracking session clears all readings from the previous session (both in-memory and in the Hive box). History is not cumulative across sessions.
+- **Backend endpoint is live** — `https://www.kasundo.app/api/target-location-test` is a hosted mock endpoint. No local server setup is required to run the app.
+- **Distance stored as a formatted string** — distance is computed as a raw `double` via the Haversine formula, then immediately formatted to a human-readable string (e.g. `"542m"`, `"1.23km"`) before being stored in Hive and displayed in the UI.
+- **Filter applies to the most recent N readings** — the dropdown filters the list to the newest N entries. Readings are ordered newest-first.

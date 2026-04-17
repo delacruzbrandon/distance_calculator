@@ -51,10 +51,11 @@ class HomeCubit extends Cubit<HomeState> {
     try {
       final position = await _repository.getCurrentLocation();
       final distance = target.distanceTo(position);
+      final formattedDistance = _formatDistance(distance);
 
       final newReading = LocationReading(
         timeStamp: DateTime.now(),
-        distance: distance,
+        distance: formattedDistance,
         latitude: position.latitude,
         longitude: position.longitude,
       );
@@ -67,7 +68,7 @@ class HomeCubit extends Cubit<HomeState> {
       emit(TrackingStart(
         currentPosition: position,
         targetPosition: target,
-        distanceFromTarget: distance,
+        distanceFromTarget: formattedDistance,
         historyList: List.from(_locationReadings),
         tick: _tickCounter,
       ));
@@ -75,6 +76,12 @@ class HomeCubit extends Cubit<HomeState> {
       emit(HomeError(e.toString()));
     }
   }
+
+  String _formatDistance(double distance) =>
+      distance < 1000
+        ? "${distance.toStringAsFixed(0)}m"
+        : "${(distance / 1000).toStringAsFixed(2)}km";
+
 
   Future<void> _getPermissions() async {
     try {

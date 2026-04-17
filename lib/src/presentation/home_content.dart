@@ -105,10 +105,17 @@ class _HomeContentState extends State<HomeContent> with WidgetsBindingObserver {
                           color: index == 0 ? Colors.green : Colors.grey,
                         ),
                         title: Text(
-                          "Lat: ${reading.latitude.toStringAsFixed(4)}, "
-                          "Lng: ${reading.longitude.toStringAsFixed(4)}",
+                          "Distance: ${reading.distance}",
                         ),
-                        subtitle: Text("Time: ${reading.timeStamp.toLocal()}"),
+                        subtitle: Column(
+                          children: [
+                            Text(
+                              "Lat: ${reading.latitude.toStringAsFixed(4)}, "
+                              "Lng: ${reading.longitude.toStringAsFixed(4)}",
+                            ),
+                            Text("Time: ${reading.timeStamp.toLocal()}"),
+                          ],
+                        ),
                         trailing: index == 0
                             ? const Badge(
                                 label: Text("Latest"),
@@ -171,9 +178,7 @@ class _HomeContentState extends State<HomeContent> with WidgetsBindingObserver {
               const Divider(),
               const Text("Distance to Target"),
               Text(
-                distance < 1000
-                    ? "${distance.toStringAsFixed(0)}m"
-                    : "${(distance / 1000).toStringAsFixed(2)}km",
+                distance,
                 style: const TextStyle(
                   fontSize: 24,
                   color: Colors.green,

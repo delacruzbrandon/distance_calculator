@@ -7,7 +7,7 @@ class LocationReading {
   @HiveField(0)
   final DateTime timeStamp;
   @HiveField(1)
-  final double distance;
+  final String distance;
   @HiveField(2)
   final double latitude;
   @HiveField(3)
