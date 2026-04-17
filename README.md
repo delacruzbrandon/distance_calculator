@@ -155,7 +155,17 @@ The API is expected to return JSON in the form:
 flutter test
 ```
 
-Current coverage: a single smoke test in `test/widget_test.dart` that verifies the app initializes correctly. Unit tests for `HomeCubit` and the repository layer are not yet written.
+| Test file | What it covers |
+|---|---|
+| `test/widget_test.dart` | Smoke test — verifies the app initializes correctly |
+| `test/home_cubit_test.dart` | Unit tests for `HomeCubit` using `bloc_test` + `mocktail` |
+
+**`HomeCubit` test cases:**
+
+- Initial state is `HomeIdle`
+- `toggleTracking(true)` emits `[HomeLoading, TrackingStart]` and calls `clearReadings` + `getTargetLocation`
+- `toggleTracking(true)` emits `[HomeLoading, HomeError]` when location permissions are denied
+- `onChangeLifecycleState(resumed)` restarts GPS polling when the current state is `TrackingStart`
 
 ---
 
