@@ -157,7 +157,6 @@ flutter test
 
 | Test file | What it covers |
 |---|---|
-| `test/widget_test.dart` | Smoke test — verifies the app initializes correctly |
 | `test/home_cubit_test.dart` | Unit tests for `HomeCubit` using `bloc_test` + `mocktail` |
 
 **`HomeCubit` test cases:**
