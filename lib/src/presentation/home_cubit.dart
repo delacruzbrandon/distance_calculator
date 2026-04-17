@@ -31,6 +31,7 @@ class HomeCubit extends Cubit<HomeState> {
       _streamCurrentLocation();
     } else {
       await _endStream();
+      emit(TrackingEnd(List.from(_locationReadings)));
       _getLocationHistory();
     }
   }
@@ -97,7 +98,6 @@ class HomeCubit extends Cubit<HomeState> {
     _locationTimer = null;
     await _currentLocationStream?.cancel();
     _currentLocationStream = null;
-    emit(TrackingEnd(List.from(_locationReadings)));
   }
 
   void _getLocationHistory() {
@@ -123,8 +123,8 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   @override
-  Future<void> close() {
-    _endStream();
+  Future<void> close() async {
+    await _endStream();
     return super.close();
   }
 }
