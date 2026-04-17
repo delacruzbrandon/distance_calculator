@@ -25,8 +25,23 @@ void main() {
     altitudeAccuracy: 0.0, headingAccuracy: 0.0,
   );
   final mockTarget = TargetLocation(latitude: 1.265, longitude: 103.695, id: '001');
+  final mockReading = LocationReading(
+    timeStamp: DateTime.now(),
+    distance: "100.0m",
+    latitude: 10.0,
+    longitude: 10.0,
+  );
   final mockPermission = LocationPermission.always;
 
+  TrackingStart mockTrackingStartState({int tick = 1}) {
+    return TrackingStart(
+      currentPosition: mockPosition,
+      targetPosition: mockTarget,
+      distanceFromTarget: "2.5 km",
+      historyList: [mockReading, mockReading, mockReading],
+      tick: tick,
+    );
+  }
   setUp(() {
     mockRepository = MockLocationRepository();
     homeCubit = HomeCubit(mockRepository);
@@ -91,9 +106,29 @@ void main() {
     );
   });
 
-  group('Lifecycle Management', () {
-    test('stops timer when app is paused', () {
-      homeCubit.onChangeLifecycleState(AppLifecycleState.paused);
-    });
-  });
+  blocTest<HomeCubit, HomeState>(
+    'should restart streaming when resumed and state is TrackingStart',
+    build: () {
+      when(() => mockRepository.checkLocationPermissions())
+          .thenAnswer((_) async => mockPermission);
+      when(() => mockRepository.clearReadings())
+          .thenAnswer((_) async => {});
+      when(() => mockRepository.getTargetLocation())
+          .thenAnswer((_) async => mockTarget);
+      when(() => mockRepository.getCurrentLocation())
+          .thenAnswer((_) async => mockPosition);
+      when(() => mockRepository.storeReading(any()))
+          .thenAnswer((_) async => {});
+
+      return homeCubit;
+    },
+    seed: () => mockTrackingStartState(tick: 1),
+    act: (cubit) async {
+      cubit.onChangeLifecycleState(AppLifecycleState.resumed);
+    },
+    wait: const Duration(milliseconds: 100),
+    verify: (_) {
+      verify(() => mockRepository.getCurrentLocation()).called(1);
+    },
+  );
 }

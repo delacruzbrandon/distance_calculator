@@ -46,6 +46,10 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> _onLocationTick() async {
+    if (_targetLocation == null && state is TrackingStart) {
+      _targetLocation = (state as TrackingStart).targetPosition;
+    }
+
     final target = _targetLocation;
     if (target == null) return;
 
@@ -116,9 +120,7 @@ class HomeCubit extends Cubit<HomeState> {
       _locationTimer?.cancel();
       _locationTimer = null;
     } else if (lifecycle == AppLifecycleState.resumed) {
-      if (state is TrackingStart) {
-        _streamCurrentLocation();
-      }
+      _streamCurrentLocation();
     }
   }
 
